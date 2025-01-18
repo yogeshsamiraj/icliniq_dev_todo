@@ -1,13 +1,17 @@
 import express from 'express';
 import { Product } from '../../model/product/product.model';
-
+import image from '../../utils/productImage.json'
 const router = express.Router();
+
+const images = image
 
 // Add a new product
 router.post('/', async (req, res) => {
   try {
     const { name, description, price, quantity } = req.body;
-    const product = new Product({ name, description, price, quantity });
+    const randomIndex = Math.floor(Math.random() * images.length);
+const randomValue = images[randomIndex]
+    const product = new Product({ name, description, price, quantity, image:randomValue });
     await product.save();
     res.status(201).json(product);
   } catch (error) {
@@ -48,13 +52,14 @@ router.get('/getproduct/:id', async (req, res): Promise<any> => {
   }
 });
 
+// Fetch product details
 router.get('/getall', async (req, res): Promise<any> => {
   try {
-    const products = await Product.find(); // Fetch all products from the database
+    const products = await Product.find();
     if (products.length === 0) {
       return res.status(404).json({ message: 'No products found' });
     }
-    res.status(200).json(products); // Return the products
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products', error });
   }

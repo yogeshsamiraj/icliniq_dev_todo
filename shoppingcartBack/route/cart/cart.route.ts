@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     if (!cart) {
       cart = new Cart({ userId, items: [] });
     }
-    const itemIndex = cart.items.findIndex((item) => item.productId === productId);
+    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId);
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
@@ -30,7 +30,7 @@ router.post('/remove/:userId/:productId', async (req, res): Promise<any> => {
     const { userId, productId } = req.params;
     const cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: 'Cart not found' });
-
+console.log(userId, productId,cart)
     cart.items = cart.items.filter((item) => item.productId !== productId);
     await cart.save();
     res.json(cart);

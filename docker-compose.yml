@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./shoppingcartFront
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./shoppingcartBack
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

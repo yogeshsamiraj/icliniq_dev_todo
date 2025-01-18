@@ -3,12 +3,14 @@ import helmet from 'helmet';
 import productRoutes from './route/product/product.route';
 import cartRoutes from './route/cart/cart.route';
 import connectDB from './db/db';
+const cors = require('cors')
 
 const app = express();
 const port = 5000
 // Middleware
 app.use(helmet());
 app.use(express.json());
+app.use(cors())
 
 // Routes
 app.use('/api/products', productRoutes);
@@ -21,6 +23,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 app.listen(port);
+
+// db connection
 connectDB()
 
 export default app;

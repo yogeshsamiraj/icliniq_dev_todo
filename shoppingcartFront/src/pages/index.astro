@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Samp from '../components/samp.jsx';
+import Layout from '@layouts/Layout.astro';
+import ListCard from '@components/listCard/index';
 
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
@@ -8,5 +8,5 @@ import Samp from '../components/samp.jsx';
 ---
 
 <Layout>
-	<Samp />
+	<ListCard client:load />
 </Layout>
