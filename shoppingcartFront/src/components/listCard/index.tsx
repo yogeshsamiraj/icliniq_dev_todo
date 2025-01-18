@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import { addProduct, deleteProduct, updateProduct, getAllProducts } from "src/api/index";
+import Popup from "../popup";
+import "./style.css";
 
 export interface ProductInterface {
   _id: string;
@@ -19,6 +20,8 @@ const ListCard: React.FC = (): any => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Partial<ProductInterface>>({});
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +85,6 @@ const ListCard: React.FC = (): any => {
             )
           );
           handleCloseDialog();
-
         })
         .catch((error) => {
           setErrorMessage("Failed to update product. Please try again.");
@@ -101,7 +103,6 @@ const ListCard: React.FC = (): any => {
             { ...response.data } as ProductInterface,
           ]);
           handleCloseDialog();
-
         })
         .catch((error) => {
           setErrorMessage("Failed to add new product. Please try again.");
@@ -110,21 +111,49 @@ const ListCard: React.FC = (): any => {
   };
 
   const handleDelete = (id: string) => {
-    deleteProduct(id)
-      .then((response: any) => {
-        setProducts((prev: any) => prev?.filter((product: any) => product._id !== id));
-      })
-      .catch((error) => {
-        setErrorMessage("Failed to delete product. Please try again.");
-      });
+    setProductToDelete(id);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (productToDelete) {
+      deleteProduct(productToDelete)
+        .then(() => {
+          setProducts((prev: any) => prev?.filter((product: any) => product._id !== productToDelete));
+          setIsConfirmDeleteOpen(false);
+        })
+        .catch((error) => {
+          setErrorMessage("Failed to delete product. Please try again.");
+          setIsConfirmDeleteOpen(false);
+        });
+    }
   };
 
   return (
     <div className="products-page">
-      <h1>Products</h1>
-      <button className="add-button" onClick={() => handleOpenDialog()}>
-        Add New Product
-      </button>
+      {/* Topbar */}
+      <div className="topbar">
+        <h1 className="company-name">icliniq_dev_todo</h1>
+        <span className="profile-name">Yogesh</span>
+      </div>
+<div className="product-label">
+  <span>
+  <h2>Products</h2>
+
+  </span>
+  <div>
+  <button className="add-button" onClick={() => handleOpenDialog()}>
+    <div style={{display:'flex'}}>
+      <FaPlus />
+      <div>
+      Add New Product
+        </div>
+    </div>
+  </button>
+  </div>
+
+</div>
+     
       <div className="products-grid">
         {products?.map((product) => (
           <div className="product-card" key={product._id}>
@@ -139,24 +168,12 @@ const ListCard: React.FC = (): any => {
               <p>Quantity: {product.quantity}</p>
             </div>
             <div className="product-actions">
-              <div className="tooltip">
-                <button
-                  className="edit-button"
-                  onClick={() => handleOpenDialog(product)}
-                >
-                  <FaEdit />
-                </button>
-                <span className="tooltip-text">Edit</span>
-              </div>
-              <div className="tooltip">
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(product._id)}
-                >
-                  <FaTrash />
-                </button>
-                <span className="tooltip-text">Delete</span>
-              </div>
+              <button className="edit-button" onClick={() => handleOpenDialog(product)}>
+                <FaEdit />
+              </button>
+              <button className="delete-button" onClick={() => handleDelete(product._id)}>
+                <FaTrash />
+              </button>
             </div>
           </div>
         ))}
@@ -164,19 +181,22 @@ const ListCard: React.FC = (): any => {
 
       {/* Error dialog */}
       {errorMessage && (
-  <div className="error-dialog">
-    <div className="errordialog animate-popup">
-      <button className="error-close-button" onClick={() => setErrorMessage(null)}>
-        ×
-      </button>
-      <h2>Error</h2>
-      <p>{errorMessage}</p>
-      <div className="errordialog-actions">
-      </div>
-    </div>
-  </div>
-)}
+        <Popup
+          type="error"
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
 
+      {/* Confirmation dialog */}
+      {isConfirmDeleteOpen && (
+        <Popup
+          type="confirmation"
+          message="Are you sure you want to delete this product?"
+          onConfirm={confirmDelete}
+          onClose={() => setIsConfirmDeleteOpen(false)}
+        />
+      )}
 
       {/* Dialog for Add/Edit */}
       {isDialogOpen && (

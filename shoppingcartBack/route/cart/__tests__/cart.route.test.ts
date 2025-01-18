@@ -61,17 +61,7 @@ describe('POST /cart', () => {
 describe('POST /cart/remove/:userId/:productId', () => {
   it('should remove an item from the cart successfully', async () => {
     const userId = '60b3b8b8b8b8b8b8b8b8b8b8';
-
-    const product = await Product.create({
-      name: 'Product to delete',
-      description: 'Delete me',
-      price: 100,
-      quantity: 30,
-    });
-
-    expect(product._id).toBeDefined()
-
-    const productId = `${product._id}`;
+    const productId = '60b3b8b8b8b8b8b8b8b8b8b8';
 
     await request(app)
       .post('/api/cart')
@@ -130,12 +120,12 @@ describe('POST /cart/update/:userId', () => {
 
     await request(app)
       .post('/api/cart')
-      .send({ userId, productId: '60b3b8b8b8b8b8b8b8b8b8b8', quantity: 2 })
+      .send({ userId, productId: productId, quantity: 2 })
       .expect(201);
 
     const response = await request(app)
       .post(`/api/cart/update/${userId}`)
-      .send({ productId: '60b3b8b8b8b8b8b8b8b8b8b8', quantity: 5 })
+      .send({ productId: productId, quantity: 5 })
       .expect(200);
 
     expect(response.body.items[0].quantity).toBe(5);
