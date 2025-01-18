@@ -31,85 +31,20 @@ This project consists of a front-end and back-end for a shopping cart applicatio
    git clone https://github.com/yogeshsamiraj/icliniq_dev_todo.git
    ```
 
-2. Navigate to the `icliniq_dev_todo` directory:
+2. Navigate into the project directory:
 
    ```bash
    cd icliniq_dev_todo
    ```
 
-3. Build the Docker containers:
+3. Build and run the Docker containers:
 
    ```bash
-   docker-compose build
+   docker-compose up --build
    ```
 
-4. After building, run the application:
+4. Access the application:
 
-   ```bash
-   docker-compose up
-   ```
-
-   This will run both the front-end and back-end of the application.
-
-5. You can access the application at:
-
-   ```
-   http://localhost:3001
-   ```
-
-### Without Docker
-
-#### Front-end
-1. Navigate to the `shoppingcartFront` directory:
-
-   ```bash
-   cd shoppingcartFront
-   ```
-
-2. Run the application in development environment:
-
-   ```bash
-   npm run dev
-   ```
-
-#### Back-end
-1. Navigate to the `shoppingcartBack` directory:
-
-   ```bash
-   cd shoppingcartBack
-   ```
-
-2. Run the back-end server:
-
-   ```bash
-   npm run serve
-   ```
-
-## Running Tests
-
-### Front-end Tests:
-1. Navigate to the `shoppingcartFront` directory:
-
-   ```bash
-   cd shoppingcartFront
-   ```
-
-2. Run the front-end tests:
-
-   ```bash
-   npm run test
-   ```
-
-### Back-end Tests:
-1. Navigate to the `shoppingcartBack` directory:
-
-   ```bash
-   cd shoppingcartBack
-   ```
-
-2. Run the back-end tests:
-
-   ```bash
-   npm run test
-   ```
+   - Frontend: `http://localhost:3000`
+   - Backend API: `http://localhost:5000`
 ```
